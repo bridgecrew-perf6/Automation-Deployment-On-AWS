@@ -1,0 +1,26 @@
+---
+# tasks file for docker_install
+- name: Download Docker Installation
+  shell: curl -fsSL https://get.docker.com -o get-docker.sh
+- name: Install Docker
+  shell: sh get-docker.sh
+  async: 300
+  poll: 0
+  become: yes
+  register: docker_installation
+- name: Install docker, docker-py using pip
+  pip:
+      name: "{{ item }}"
+  with_items:
+      - docker-py
+- name: Check Docker Installation
+  async_status:
+      jid: "{{ docker_installation.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 30
+  delay: 10
+  become: yes
+- name: chmod 666 /var/run/docker.sock
+  shell: chmod 666 /var/run/docker.sock
+  become: yes

@@ -1,0 +1,6 @@
+---
+# defaults file for run_container_mysql
+mysql_image_name: "my_cloud_mysql"
+mysql_image_version: "v1.0.0"
+mysql_container_name: "mysql"
+mysql_binding_ports: "3306:3306"

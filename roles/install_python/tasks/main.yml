@@ -1,0 +1,13 @@
+---
+# tasks file for install_python
+- name: apt-get update
+  apt:
+      update_cache: yes
+  become: yes
+- name: Install Python3 & Pip3
+  apt:
+      name: "{{ item }}"
+  become: yes
+  with_items:
+      - python3
+      - python3-pip

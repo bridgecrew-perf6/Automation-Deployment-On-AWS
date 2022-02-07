@@ -1,0 +1,13 @@
+---
+# tasks file for run_container_wordpress
+- name: Run container of WordPress image
+  docker_container:
+      name: "{{ wordpress_container_name }}"
+      image: "{{ wordpress_image_name }}:{{ wordpress_image_version }}"
+      env:
+          WORDPRESS_DB_HOST: "{{ mysql_ip }}"
+          WORDPRESS_DB_USER: "{{ mysql_new_user }}"
+          WORDPRESS_DB_PASSWORD: "{{ mysql_new_user_pass }}"
+          WORDPRESS_DB_NAME: "{{ wordpress_db_name }}"
+      ports:
+          - "{{ wordpress_binding_ports }}"

@@ -1,0 +1,4 @@
+---
+# defaults file for build_image_phpmyadmin
+phpmyadmin_image_name: "my_cloud_phpmyadmin"
+phpmyadmin_image_version: "v1.0.0"

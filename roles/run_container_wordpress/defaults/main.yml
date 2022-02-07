@@ -1,0 +1,6 @@
+---
+# defaults file for run_container_wordpress
+wordpress_container_name: "wordpress"
+wordpress_image_name: "my_cloud_wordpress"
+wordpress_image_version: "v1.0.0"
+wordpress_binding_ports: "80:80"

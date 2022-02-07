@@ -1,0 +1,10 @@
+---
+# tasks file for run_container_phpmyadmin
+- name: Run container of PhpMyAdmin image
+  docker_container:
+      name: "{{ phpmyadmin_container_name }}"
+      image: "{{ phpmyadmin_image_name }}:{{ phpmyadmin_image_version }}"
+      env:
+          PMA_HOST: "{{ mysql_ip }}"
+      ports:
+          - "{{ phpmyadmin_binding_ports }}"

@@ -1,0 +1,6 @@
+---
+# defaults file for run_container_phpmyadmin
+phpmyadmin_container_name: "phpmyadmin"
+phpmyadmin_image_name: "my_cloud_phpmyadmin"
+phpmyadmin_image_version: "v1.0.0"
+phpmyadmin_binding_ports: "8080:80"

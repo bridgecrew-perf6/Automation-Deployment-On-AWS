@@ -1,0 +1,13 @@
+---
+# tasks file for build_image_phpmyadmin
+- name: Copy Dockerfile to the remote machine
+  copy:
+      src: .
+      dest: ~/phpmyadmin
+- name: Build PhpMyAdmin Image
+  docker_image:
+      name: "{{ phpmyadmin_image_name }}"
+      tag: "{{ phpmyadmin_image_version }}"
+      source: build
+      build:
+          path: ~/phpmyadmin/

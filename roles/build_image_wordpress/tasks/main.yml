@@ -1,0 +1,13 @@
+---
+# tasks file for build_image_wordpress
+- name: Copy Dockerfile to the remote machine
+  copy:
+      src: .
+      dest: ~/wordpress
+- name: Build WordPress image
+  docker_image:
+      name: "{{ wordpress_image_name }}"
+      tag: "{{ wordpress_image_version }}"
+      source: build
+      build:
+          path: ~/wordpress/

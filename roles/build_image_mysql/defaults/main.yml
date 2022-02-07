@@ -1,0 +1,4 @@
+---
+# defaults file for mysql_db
+mysql_image_name: "my_cloud_mysql"
+mysql_image_version: "v1.0.0"

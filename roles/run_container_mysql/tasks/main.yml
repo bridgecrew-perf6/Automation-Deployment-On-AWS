@@ -1,0 +1,13 @@
+---
+# tasks file for run_container_mysql
+- name : Run container of MySql image
+  docker_container:
+      name: "{{ mysql_container_name }}"
+      image: "{{ mysql_image_name }}:{{ mysql_image_version }}"
+      env:
+          MARIADB_ROOT_PASSWORD: "{{ mysql_root_pass }}"
+          MARIADB_USER: "{{ mysql_new_user }}"
+          MARIADB_PASSWORD: "{{ mysql_new_user_pass }}"
+          MARIADB_DATABASE: "{{ wordpress_db_name }}"
+      ports:
+          - "{{ mysql_binding_ports }}"

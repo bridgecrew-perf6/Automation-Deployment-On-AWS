@@ -1,0 +1,4 @@
+---
+# defaults file for build_image_wordpress
+wordpress_image_name: "my_cloud_wordpress"
+wordpress_image_version: "v1.0.0"

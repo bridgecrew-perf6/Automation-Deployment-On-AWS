@@ -1,0 +1,15 @@
+---
+# tasks file for build_images
+- name: Copy Dockerfile to the remote machine
+  copy:
+      src: .
+      dest: ~/mysql
+- name: Replace localhost with new IP address in DB
+  shell: sed 's/localhost/'{{ wordpress_ip }}'/g' ~/mysql/wordpress.sql > ~/mysql/new-wordpress.sql
+- name: Build MySql Image
+  docker_image:
+      name: "{{ mysql_image_name }}"
+      tag: "{{ mysql_image_version }}"
+      source: build
+      build:
+          path: ~/mysql/

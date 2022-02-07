@@ -1,0 +1,38 @@
+- name: Installation of Python and Docker
+  strategy: free
+  hosts: All
+  roles:
+      - { role: install_python, tags: install_python }
+      - { role: install_docker, tags: install_docker }
+- name: Building MySql Image And Run it
+  hosts: target2
+  vars_files:
+      - config.yml
+  roles:
+      - { 
+          role: run_container_mysql,
+          mysql_root_pass: "{{ mariadb_root_pass }}",
+          mysql_new_user: "{{ mariadb_new_user }}",
+          mysql_new_user_pass: "{{ mariadb_new_user_pass }}",
+          wordpress_db_name: "{{ wordpress_db }}",
+          wordpress_ip: "{{ hostvars['target1']['ansible_default_ipv4']['address'] }}",
+          tags: run_container_mysql 
+        }
+- name: Building Wordpress & PhpMyadmin and run them
+  hosts: target1
+  vars_files:
+      - config.yml
+  roles:
+      - {
+          role: run_container_wordpress,
+          mysql_new_user: "{{ mariadb_new_user }}",
+          mysql_new_user_pass: "{{ mariadb_new_user_pass }}",
+          wordpress_db_name: "{{ wordpress_db }}",
+          mysql_ip: "{{ hostvars['target2']['ansible_default_ipv4']['address'] }}",
+          tags: run_container_wordpress
+        }
+      - {
+          role: run_container_phpmyadmin,
+          mysql_ip: "{{ hostvars['target2']['ansible_default_ipv4']['address'] }}",
+          tags: run_container_phpmyadmin
+        }
