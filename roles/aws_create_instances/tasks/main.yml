@@ -1,0 +1,39 @@
+---
+# tasks file for aws_create_instances
+- name: Create EC2 Key Pair
+  ec2_key:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: wordpress_key
+      key_material: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  register: key_pair
+- name: Create EC2 Instance in private subnet for MariaDB
+  ec2_instance:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: "{{ ec2_mariadb_name }}"
+      key_name: "{{ key_pair.key.name }}"
+      vpc_subnet_id: "{{ private_subnet.subnet.id }}"
+      instance_type : "{{ ec2_mariadb_instance_type }}"
+      security_group: "{{ sg_private.group_id }}"
+      image_id: "{{ ec2_mariadb_instance_image }}"
+      wait: yes
+- name: Create EC2 Instance in public subnet for Wordpress & PhpMyAdmin
+  ec2_instance:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: "{{ ec2_wordpress_name }}"
+      key_name: "{{ key_pair.key.name }}"
+      vpc_subnet_id: "{{ public_subnet.subnet.id }}"
+      instance_type : "{{ ec2_wordpress_instance_type }}"
+      security_group: "{{ sg_public.group_id }}"
+      network:
+          assign_public_ip: true
+      image_id: "{{ ec2_wordpress_instance_image }}"
+      wait: yes

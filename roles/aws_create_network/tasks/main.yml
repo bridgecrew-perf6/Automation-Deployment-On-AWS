@@ -1,0 +1,81 @@
+---
+# tasks file for create_network_aws
+- name : Create AWS VPC
+  ec2_vpc_net:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: "{{ vpc_name }}"
+      cidr_block: "{{ vpc_cidr }}"
+  register: vpc
+- name: Create Public Subnet
+  ec2_vpc_subnet:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      cidr: "{{ public_subnet_cidr }}"
+      tags:
+          Name: Public Subnet
+  register: public_subnet
+- name: Create Private Subnet
+  ec2_vpc_subnet:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      cidr: "{{ private_subnet_cidr }}"
+      tags:
+          Name: Private Subnet
+  register: private_subnet
+- name: Create Internet Gateway
+  ec2_vpc_igw:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+  register: igw
+- name: Create NAT Gateway
+  ec2_vpc_nat_gateway:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      if_exist_do_not_create: true
+      subnet_id: "{{ public_subnet.subnet.id }}"
+      wait: true
+  register: nat
+- name: Create Route Table for Public Subnet
+  ec2_vpc_route_table:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      tags:
+          Name: Public
+      subnets:
+          - "{{ public_subnet.subnet.id }}"
+      routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
+  register: public_route_table
+- name: Create Route Table for Private Subnet
+  ec2_vpc_route_table:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      tags:
+          Name: Private
+      subnets:
+          - "{{ private_subnet.subnet.id }}"
+      routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ nat.nat_gateway_id }}"
+  register: nat_route_table

@@ -1,0 +1,7 @@
+---
+# defaults file for aws_create_security_groups
+aws_region: "us-east-2"
+sg_public_name: "Public Security Group"
+sg_public_description: "Wordpress & PhpMyAdmin"
+sg_private_name: "Private Security Group"
+sg_private_description: "MariaDb (MySql)"

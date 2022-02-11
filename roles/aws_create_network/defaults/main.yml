@@ -1,0 +1,7 @@
+---
+# defaults file for create_network_aws
+aws_region: "us-east-2"
+vpc_name: "Wordpress"
+vpc_cidr: "10.0.0.0/16"
+public_subnet_cidr: "10.0.0.0/24"
+private_subnet_cidr: "10.0.1.0/24"

@@ -1,3 +1,21 @@
+- name: Create VPC & Subnets in AWS
+  hosts: localhost
+  vars_files:
+      - config.yml
+  roles:
+      - { role: aws_create_network, access_key: "{{ aws_access_key }}", secret_key: "{{ aws_secret_key }}", tags: aws_install_vpc }
+- name: Create Security Groups
+  hosts: localhost
+  vars_files:
+      - config.yml
+  roles:
+      - { role: aws_create_security_groups, access_key: "{{ aws_access_key }}", secret_key: "{{ aws_secret_key }}", tags: aws_create_sg }
+- name: Create EC2 Instances
+  hosts: localhost
+  vars_files:
+      - config.yml
+  roles:
+      - { role: aws_create_instances, access_key: "{{ aws_access_key }}", secret_key: "{{ aws_secret_key }}", tags: aws_create_instances }
 - name: Installation of Python and Docker
   strategy: free
   hosts: All

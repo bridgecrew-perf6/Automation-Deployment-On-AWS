@@ -1,0 +1,42 @@
+---
+# tasks file for aws_create_security_groups
+- name: Create Security Group for public Instances
+  ec2_group:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: "{{ sg_public_name }}"
+      description: "{{ sg_public_description }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+      rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+  register: sg_public
+- name: Create Security Group for private Instances
+  ec2_group:
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      region: "{{ aws_region }}"
+      name: "{{ sg_private_name }}"
+      description: "{{ sg_private_description }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      rules:
+          - proto: tcp
+            from_port: 3306
+            to_port: 3306
+            cidr_ip: "{{ public_subnet.subnet.cidr_block }}"
+      rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+  register: sg_private

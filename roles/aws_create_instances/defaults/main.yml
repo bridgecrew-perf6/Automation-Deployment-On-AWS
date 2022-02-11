@@ -1,0 +1,9 @@
+---
+# defaults file for aws_create_instances
+aws_region: "us-east-2"
+ec2_mariadb_name: "MariaDB"
+ec2_mariadb_instance_type: "t2.micro"
+ec2_mariadb_instance_image: "ami-0fb653ca2d3203ac1"
+ec2_wordpress_name: "WordPress & PhpMyAdmin"
+ec2_wordpress_instance_type: "t2.micro"
+ec2_wordpress_instance_image: "ami-0fb653ca2d3203ac1"
